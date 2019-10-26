@@ -1,5 +1,6 @@
 FROM beardedeagle/alpine-phoenix-builder:1.7.3 as builder
 ARG appname
+ARG DATABASE_URL
 ENV appdir /opt/${appname}
 ENV appver 0.0.1
 WORKDIR ${appdir}

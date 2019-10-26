@@ -6,20 +6,21 @@ services:
       dockerfile: ./build_web/Dockerfile
       args:
         appname: my_app
+        DATABASE_URL: ecto://my_app:my_app_pass@db/postgres
     ports:
       - "4000:4000"
     # command: mix phx.server
     command: bin/my_app foreground
+    env_file:
+      - .env
     environment:
       - MIX_ENV=prod
     depends_on:
       - db
   db:
     image: postgres
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - PGDATA=/var/lib/postgresql/data/pgdata
+    env_file:
+      - .env
     volumes:
       - db-data:/var/lib/postgresql/data/pgdata
 volumes:
