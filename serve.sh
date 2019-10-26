@@ -5,7 +5,7 @@ if readlink $BASH_SOURCE >/dev/null
 then
     YML=docker-compose.dev.yml
     LOGS=./dev-logs.sh
-    WEB=web
+    WEB=web.dev
 else
     YML=docker-compose.yml
     LOGS=./logs.sh

@@ -4,7 +4,7 @@ cd $SCRIPT_DIR
 if readlink $BASH_SOURCE >/dev/null
 then
     YML=docker-compose.dev.yml
-    WEB=web
+    WEB=web.dev
 else
     YML=docker-compose.yml
     WEB=web
