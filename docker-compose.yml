@@ -1,0 +1,26 @@
+version: '3.2'
+services:
+  web:
+    build:
+      context: ./web
+      args:
+        appname: my_app
+    ports:
+      - "4000:4000"
+    # command: mix phx.server
+    command: bin/my_app foreground
+    environment:
+      - MIX_ENV=prod
+      - PORT=4000
+    depends_on:
+      - db
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - db-data:/var/lib/postgresql/data/pgdata
+volumes:
+  db-data:
