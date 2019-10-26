@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   web:
-    build: ./dev
+    build: ./build_dev
     environment:
       - MIX_ENV=dev
     volumes:
