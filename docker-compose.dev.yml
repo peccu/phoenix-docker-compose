@@ -6,15 +6,15 @@ services:
       - .env
     environment:
       - MIX_ENV=dev
+      - APP_NAME=my_app
     volumes:
       - .:/app
     ports:
       - "4100:4000"
     depends_on:
       - db
-    command: bash -c "cd my_app && mix phx.server"
-    # command: tail -f /dev/null
-    # stop_signal: SIGKILL
+    command: tail -f /dev/null
+    stop_signal: SIGKILL
   db:
     image: postgres
     env_file:
