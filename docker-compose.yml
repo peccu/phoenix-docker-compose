@@ -11,7 +11,6 @@ services:
     command: bin/my_app foreground
     environment:
       - MIX_ENV=prod
-      - PORT=4000
     depends_on:
       - db
   db:

@@ -4,7 +4,6 @@ services:
     build: ./dev
     environment:
       - MIX_ENV=dev
-      - PORT=4000
     volumes:
       - .:/app
     ports:
