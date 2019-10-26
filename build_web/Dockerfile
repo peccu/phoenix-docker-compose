@@ -3,7 +3,7 @@ ARG appname
 ENV appdir /opt/${appname}
 ENV appver 0.0.1
 WORKDIR ${appdir}
-COPY ../${appname} ${appdir}
+COPY ./${appname} ${appdir}
 RUN mix deps.get --only prod \
   && MIX_ENV=prod mix compile \
   && cd assets \
