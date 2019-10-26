@@ -9,8 +9,10 @@ services:
         DATABASE_URL: ecto://my_app:my_app_pass@db/postgres
     ports:
       - "4000:4000"
+    command: tail -f /dev/null
+    stop_signal: SIGKILL
     # command: mix phx.server
-    command: bin/my_app foreground
+    command: my_app/bin/my_app start
     env_file:
       - .env
     environment:

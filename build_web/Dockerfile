@@ -1,32 +1,36 @@
-FROM beardedeagle/alpine-phoenix-builder:1.7.3 as builder
+# need to update to this Dockerfile
+# https://hexdocs.pm/phoenix/releases.html#containers
+FROM beardedeagle/alpine-phoenix-builder:latest as builder
 ARG appname
 ARG DATABASE_URL
+ARG SECRET_KEY_BASE
 ENV appdir /opt/${appname}
-ENV appver 0.0.1
+ENV appver 0.1.0
 WORKDIR ${appdir}
 COPY ./${appname} ${appdir}
 RUN mix deps.get --only prod \
   && MIX_ENV=prod mix compile \
   && cd assets \
   && npm install \
-  && node node_modules/brunch/bin/brunch build --production \
+  && node node_modules/webpack/bin/webpack.js --mode production \
   && cd ${appdir} \
   && MIX_ENV=prod mix phx.digest \
-  && MIX_ENV=prod mix release --env=prod
+  && MIX_ENV=prod mix release \
+  && cd _build/prod/rel; tar -czvf ${appdir}/${appname}-${appver}.tar.gz ${appname}
 
-FROM alpine:3.8
+FROM alpine:3.10.2
 EXPOSE 4000
 ARG appname
 ENV appdir /opt/${appname}
-ENV appver 0.0.1
-WORKDIR /opt/
-COPY --from=builder ${appdir}/_build/prod/rel/${appname}/releases/${appver}/${appname}.tar.gz .
+ENV appver 0.1.0
+WORKDIR /opt/${appname}
+COPY --from=builder ${appdir}/${appname}-${appver}.tar.gz .
 RUN apk add --no-cache bash libressl \
-  && tar -xzvf ${appname}.tar.gz \
-  && rm -rf ${appname}.tar.gz \
+  && tar -xzvf ${appname}-${appver}.tar.gz \
+  && rm -rf ${appname}-${appver}.tar.gz \
   && rm -rf /root/.cache \
   && rm -rf /var/cache/apk/*
-CMD ["bin/${appname}", "foreground"]
+CMD ["${appname}/bin/${appname}", "start"]
 
 # To start the release you have built, you can use one of the following tasks:
 
