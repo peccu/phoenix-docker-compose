@@ -10,8 +10,9 @@ services:
       - "4100:4000"
     depends_on:
       - db
-    command: tail -f /dev/null
-    stop_signal: SIGKILL
+    command: bash -c "cd my_app && mix phx.server"
+    # command: tail -f /dev/null
+    # stop_signal: SIGKILL
   db:
     image: postgres
     environment:
