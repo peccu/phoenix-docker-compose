@@ -1,0 +1,15 @@
+*~
+.DS_Store
+_build/
+deps/
+assets/node_modules/
+test/
+doc/
+priv/static/
+test/
+tmp/
+npm-debug.log
+*.ez
+erl_crash.dump
+.fetch
+cover/
