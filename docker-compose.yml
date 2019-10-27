@@ -11,10 +11,10 @@ services:
         SECRET_KEY_BASE: ABCDABCD...
     ports:
       - "4000:4000"
-    command: tail -f /dev/null
-    stop_signal: SIGKILL
+    # command: tail -f /dev/null
+    # stop_signal: SIGKILL
     # command: mix phx.server
-    command: my_app/bin/my_app start
+    command: bin/my_app start
     env_file:
       - .env
     environment:
