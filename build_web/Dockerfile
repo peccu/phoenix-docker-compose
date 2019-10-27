@@ -1,56 +1,53 @@
-# need to update to this Dockerfile
 # https://hexdocs.pm/phoenix/releases.html#containers
-FROM beardedeagle/alpine-phoenix-builder:latest as builder
+FROM elixir:1.9.2-alpine as build
+
 ARG appname
 ARG DATABASE_URL
 ARG SECRET_KEY_BASE
-ENV appdir /opt/${appname}
-ENV appver 0.1.0
-WORKDIR ${appdir}
-COPY ./${appname} ${appdir}
-RUN mix deps.get --only prod \
-  && MIX_ENV=prod mix compile \
-  && cd assets \
-  && npm install \
-  && node node_modules/webpack/bin/webpack.js --mode production \
-  && cd ${appdir} \
-  && MIX_ENV=prod mix phx.digest \
-  && MIX_ENV=prod mix release \
-  && cd _build/prod/rel; tar -czvf ${appdir}/${appname}-${appver}.tar.gz ${appname}
 
-FROM alpine:3.10.2
-EXPOSE 4000
-ARG appname
-ENV appdir /opt/${appname}
-ENV appver 0.1.0
-WORKDIR /opt/${appname}
-COPY --from=builder ${appdir}/${appname}-${appver}.tar.gz .
-RUN apk add --no-cache bash libressl \
-  && tar -xzvf ${appname}-${appver}.tar.gz \
-  && rm -rf ${appname}-${appver}.tar.gz \
-  && rm -rf /root/.cache \
-  && rm -rf /var/cache/apk/*
-CMD ["${appname}/bin/${appname}", "start"]
+# install build dependencies
+RUN apk add --update git build-base nodejs yarn python
 
-# To start the release you have built, you can use one of the following tasks:
+# prepare build dir
+RUN mkdir /app
+WORKDIR /app
 
-#     # start a shell, like 'iex -S mix'
-#     > _build/prod/rel/my_app/bin/my_app console
+# install hex + rebar
+RUN mix local.hex --force && \
+    mix local.rebar --force
 
-#     # start in the foreground, like 'mix run --no-halt'
-#     > _build/prod/rel/my_app/bin/my_app foreground
+# set build ENV
+ENV MIX_ENV=prod
 
-#     # start in the background, must be stopped with the 'stop' command
-#     > _build/prod/rel/my_app/bin/my_app start
+# install mix dependencies
+COPY ${appname}/mix.exs ${appname}/mix.lock ./
+COPY ${appname}/config config
+RUN mix deps.get
+RUN mix deps.compile
 
-# If you started a release elsewhere, and wish to connect to it:
+# build assets
+COPY ${appname}/assets assets
+RUN cd assets && yarn install && yarn run deploy
+RUN mix phx.digest
 
-#     # connects a local shell to the running node
-#     > _build/prod/rel/my_app/bin/my_app remote_console
+# build project
+COPY ${appname}/priv priv
+COPY ${appname}/lib lib
+RUN mix compile
 
-#     # connects directly to the running node's console
-#     > _build/prod/rel/my_app/bin/my_app attach
+# build release
+COPY ${appname}/rel rel
+RUN mix release
 
-# For a complete listing of commands and their use:
+# prepare release image
+FROM alpine:3.9 AS app
+RUN apk add --update bash openssl
 
-#     > _build/prod/rel/my_app/bin/my_app help
+RUN mkdir /app
+WORKDIR /app
+
+COPY --from=build /app/_build/prod/rel/my_app ./
+RUN chown -R nobody: /app
+USER nobody
+
+ENV HOME=/app
