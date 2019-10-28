@@ -9,6 +9,7 @@ services:
         DATABASE_URL: ecto://my_app:my_app_pass@db/postgres
         # generate this from mix phx.gen.secret
         SECRET_KEY_BASE: ABCDABCD...
+    restart: always
     ports:
       - "4000:4000"
     # command: tail -f /dev/null
@@ -23,6 +24,7 @@ services:
       - db
   db:
     image: postgres
+    restart: always
     env_file:
       - .env
     volumes:
