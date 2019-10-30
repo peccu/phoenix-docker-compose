@@ -10,18 +10,18 @@ services:
         # generate this from mix phx.gen.secret
         SECRET_KEY_BASE: ABCDABCD...
     restart: always
-    ports:
-      - "4000:4000"
-    # command: tail -f /dev/null
-    # stop_signal: SIGKILL
-    # command: mix phx.server
-    command: bin/my_app start
     env_file:
       - .env
     environment:
       - MIX_ENV=prod
+    ports:
+      - "4000:4000"
     depends_on:
       - db
+    command: "bin/my_app start"
+    # command: tail -f /dev/null
+    # stop_signal: SIGKILL
+    # command: mix phx.server
   db:
     image: postgres
     restart: always
