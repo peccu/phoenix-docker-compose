@@ -14,11 +14,13 @@ services:
       - .env
     environment:
       - MIX_ENV=prod
+      # change here and above build.args
+      - APP_NAME=my_app
     ports:
       - "4000:4000"
     depends_on:
       - db
-    command: "bin/my_app start"
+    command: bash -c "bin/$$APP_NAME start"
     # command: tail -f /dev/null
     # stop_signal: SIGKILL
     # command: mix phx.server
