@@ -8,14 +8,13 @@ services:
         DATABASE_URL: ecto://postgres:postgres@db/my_app
         # generate this from mix phx.gen.secret
         SECRET_KEY_BASE: ABCDABCD...
-        APP_NAME: my_app
+        # set in .env
+        APP_NAME: $APP_NAME
     restart: always
     env_file:
       - .env
     environment:
       - MIX_ENV=prod
-      # change here and above build.args
-      - APP_NAME=my_app
     ports:
       - "4000:4000"
     depends_on:

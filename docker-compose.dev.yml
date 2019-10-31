@@ -7,7 +7,6 @@ services:
       - .env
     environment:
       - MIX_ENV=dev
-      - APP_NAME=my_app
     volumes:
       - .:/app
     ports:
