@@ -1,2 +1,4 @@
 *~
 .DS_Store
+.mix/
+.bash_history

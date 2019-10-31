@@ -13,3 +13,5 @@ npm-debug.log
 erl_crash.dump
 .fetch
 cover/
+.mix/
+.bash_history

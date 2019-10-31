@@ -12,3 +12,4 @@ RUN mix local.hex --force \
         && mix local.rebar --force
 
 WORKDIR /app
+ENV HOME=/app
