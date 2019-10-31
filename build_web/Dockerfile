@@ -42,6 +42,9 @@ RUN mix release
 # prepare release image
 FROM alpine:3.9 AS app
 ARG APP_NAME
+ARG DATABASE_URL
+ARG SECRET_KEY_BASE
+
 RUN apk add --update bash openssl
 
 RUN mkdir /app
