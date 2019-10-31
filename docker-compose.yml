@@ -5,10 +5,10 @@ services:
       context: .
       dockerfile: ./build_web/Dockerfile
       args:
-        appname: my_app
         DATABASE_URL: ecto://postgres:postgres@db/my_app
         # generate this from mix phx.gen.secret
         SECRET_KEY_BASE: ABCDABCD...
+        APP_NAME: my_app
     restart: always
     env_file:
       - .env

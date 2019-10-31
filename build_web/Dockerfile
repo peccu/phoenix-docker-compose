@@ -1,7 +1,7 @@
 # https://hexdocs.pm/phoenix/releases.html#containers
 FROM elixir:1.9.2-alpine as build
 
-ARG appname
+ARG APP_NAME
 ARG DATABASE_URL
 ARG SECRET_KEY_BASE
 
@@ -20,23 +20,23 @@ RUN mix local.hex --force && \
 ENV MIX_ENV=prod
 
 # install mix dependencies
-COPY ${appname}/mix.exs ${appname}/mix.lock ./
-COPY ${appname}/config config
+COPY ${APP_NAME}/mix.exs ${APP_NAME}/mix.lock ./
+COPY ${APP_NAME}/config config
 RUN mix deps.get
 RUN mix deps.compile
 
 # build assets
-COPY ${appname}/assets assets
+COPY ${APP_NAME}/assets assets
 RUN cd assets && yarn install && yarn run deploy
 RUN mix phx.digest
 
 # build project
-COPY ${appname}/priv priv
-COPY ${appname}/lib lib
+COPY ${APP_NAME}/priv priv
+COPY ${APP_NAME}/lib lib
 RUN mix compile
 
 # build release
-COPY ${appname}/rel rel
+COPY ${APP_NAME}/rel rel
 RUN mix release
 
 # prepare release image
