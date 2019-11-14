@@ -1,7 +1,7 @@
 # https://hexdocs.pm/phoenix/releases.html#containers
 FROM elixir:1.9.2-alpine as build
 
-ARG APP_NAME
+ARG THIS_APP_NAME
 ARG DATABASE_URL
 ARG SECRET_KEY_BASE
 
@@ -20,19 +20,19 @@ RUN mix local.hex --force && \
 ENV MIX_ENV=prod
 
 # install mix dependencies
-COPY ${APP_NAME}/mix.exs ${APP_NAME}/mix.lock ./
-COPY ${APP_NAME}/config config
-RUN mix deps.get
+COPY ${THIS_APP_NAME}/mix.exs ${THIS_APP_NAME}/mix.lock ./
+COPY ${THIS_APP_NAME}/config config
+RUN mix deps.get --only prod
 RUN mix deps.compile
 
 # build assets
-COPY ${APP_NAME}/assets assets
+COPY ${THIS_APP_NAME}/assets assets
 RUN cd assets && yarn install && yarn run deploy
 RUN mix phx.digest
 
 # build project
-COPY ${APP_NAME}/priv priv
-COPY ${APP_NAME}/lib lib
+COPY ${THIS_APP_NAME}/priv priv
+COPY ${THIS_APP_NAME}/lib lib
 RUN mix compile
 
 # build release
@@ -41,7 +41,7 @@ RUN mix release
 
 # prepare release image
 FROM alpine:3.9 AS app
-ARG APP_NAME
+ARG THIS_APP_NAME
 ARG DATABASE_URL
 ARG SECRET_KEY_BASE
 
@@ -50,7 +50,7 @@ RUN apk add --update bash openssl
 RUN mkdir /app
 WORKDIR /app
 
-COPY --from=build /app/_build/prod/rel/${APP_NAME} ./
+COPY --from=build /app/_build/prod/rel/${THIS_APP_NAME} ./
 RUN chown -R nobody: /app
 USER nobody
 

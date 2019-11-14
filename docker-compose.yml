@@ -6,7 +6,7 @@ services:
       dockerfile: ./build_web/Dockerfile
       args:
         # set in .env
-        APP_NAME: $APP_NAME
+        THIS_APP_NAME: $THIS_APP_NAME
         DATABASE_URL: $DATABASE_URL
         SECRET_KEY_BASE: $SECRET_KEY_BASE
     restart: always
@@ -18,7 +18,7 @@ services:
       - "4000:4000"
     depends_on:
       - db
-    command: bash -c "bin/$$APP_NAME start"
+    command: bash -c "bin/$$THIS_APP_NAME start"
     # command: tail -f /dev/null
     # stop_signal: SIGKILL
     # command: mix phx.server

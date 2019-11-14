@@ -11,4 +11,4 @@ else
     LOGS=./logs.sh
     WEB=web
 fi
-docker-compose -f $YML exec $WEB bash -c "export COLUMNS=$(tput cols); export LINES=$(tput lines); cd \$APP_NAME; mix phx.server"
+docker-compose -f $YML exec $WEB bash -c "export COLUMNS=$(tput cols); export LINES=$(tput lines); cd \$THIS_APP_NAME; iex -S mix phx.server"
