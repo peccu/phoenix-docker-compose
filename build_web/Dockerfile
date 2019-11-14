@@ -1,5 +1,5 @@
 # https://hexdocs.pm/phoenix/releases.html#containers
-FROM elixir:1.9.2-alpine as build
+FROM elixir:1.9.4-alpine as build
 
 ARG THIS_APP_NAME
 ARG DATABASE_URL
