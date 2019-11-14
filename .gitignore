@@ -2,3 +2,6 @@
 .DS_Store
 .mix/
 .bash_history
+.config/
+.hex/
+.npm/

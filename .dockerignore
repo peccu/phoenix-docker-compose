@@ -15,3 +15,6 @@ erl_crash.dump
 cover/
 .mix/
 .bash_history
+.config/
+.hex/
+.npm/
