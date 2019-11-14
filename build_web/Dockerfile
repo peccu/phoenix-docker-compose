@@ -36,7 +36,6 @@ COPY ${THIS_APP_NAME}/lib lib
 RUN mix compile
 
 # build release
-COPY ${APP_NAME}/rel rel
 RUN mix release
 
 # prepare release image
