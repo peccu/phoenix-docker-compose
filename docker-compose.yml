@@ -1,33 +1,26 @@
 version: '3.7'
 services:
-  web:
-    build:
-      context: .
-      dockerfile: ./build_web/Dockerfile
-      args:
-        # set in .env
-        THIS_APP_NAME: $THIS_APP_NAME
-        DATABASE_URL: $DATABASE_URL
-        SECRET_KEY_BASE: $SECRET_KEY_BASE
+  web.dev:
+    build: ./build_dev
     restart: always
     env_file:
       - .env
     environment:
-      - MIX_ENV=prod
+      - MIX_ENV=dev
+    volumes:
+      - .:/app
     ports:
-      - "4000:4000"
+      - "4100:4000"
     depends_on:
-      - db
-    command: bash -c "bin/$$THIS_APP_NAME start"
-    # command: tail -f /dev/null
-    # stop_signal: SIGKILL
-    # command: mix phx.server
-  db:
+      - db.dev
+    command: tail -f /dev/null
+    stop_signal: SIGKILL
+  db.dev:
     image: postgres
     restart: always
     env_file:
       - .env
     volumes:
-      - db-data:/var/lib/postgresql/data/pgdata
+      - db.dev-data:/var/lib/postgresql/data/pgdata
 volumes:
-  db-data:
+  db.dev-data:
