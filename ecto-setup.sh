@@ -14,16 +14,27 @@ case "$os" in
         exit 1
 esac
 
+cd $SCRIPT_DIR
 if readlink $BASH_SOURCE >/dev/null
 then
-    # mix does not in prod container
-    export COMPOSE_FILE="docker-compose.yml${COMPOSE_FILE_DELIMITOR}../docker-compose.yml${COMPOSE_FILE_DELIMITOR}../docker-compose.mix-prod.yml"
-    WEB=web.dev
+    # prepare migration
+    export COMPOSE_FILE="docker-compose.yml${COMPOSE_FILE_DELIMITOR}docker-compose.mix-prod.yml"
+    WEB=web.ecto
     MIX_ENV=prod
+    docker-compose up -d $WEB
 else
     WEB=web.dev
     MIX_ENV=dev
+    docker-compose up -d
+    sleep 3
 fi
-cd $SCRIPT_DIR
 
 docker-compose exec $WEB bash -c "export COLUMNS=$(tput cols); export LINES=$(tput lines); cd \$THIS_APP_NAME; MIX_ENV=$MIX_ENV mix deps.get && MIX_ENV=$MIX_ENV mix deps.compile && MIX_ENV=$MIX_ENV mix ecto.setup"
+if readlink $BASH_SOURCE >/dev/null
+then
+    # prepare migration
+    export COMPOSE_FILE="docker-compose.yml${COMPOSE_FILE_DELIMITOR}docker-compose.mix-prod.yml"
+    WEB=web.ecto
+    MIX_ENV=prod
+    docker-compose stop $WEB
+fi

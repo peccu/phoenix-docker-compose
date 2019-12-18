@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  web.ecto:
+    build: ./build_dev
+    env_file:
+      - .env
+    environment:
+      - MIX_ENV=prod
+    volumes:
+      - ..:/app
+    depends_on:
+      - db
+    command: tail -f /dev/null
+    stop_signal: SIGKILL
