@@ -5,3 +5,4 @@
 .config/
 .hex/
 .npm/
+*-emacs-elixir-format.*
