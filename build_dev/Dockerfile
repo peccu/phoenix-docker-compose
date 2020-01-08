@@ -12,10 +12,5 @@ RUN mix local.hex --force \
         && mix archive.install --force hex phx_new ${PHOENIX_VERSION} \
         && mix local.rebar --force
 
-ENV TZ=Asia/Tokyo
-RUN rm /etc/localtime \
-        && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
-        && echo $TZ > /etc/timezone
-
 WORKDIR /app
 ENV HOME=/app

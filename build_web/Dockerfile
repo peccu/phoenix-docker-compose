@@ -44,10 +44,7 @@ ARG THIS_APP_NAME
 ARG DATABASE_URL
 ARG SECRET_KEY_BASE
 
-RUN apk add --update --no-cache bash openssl tzdata
-ENV TZ=Asia/Tokyo
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
-        && echo $TZ > /etc/timezone
+RUN apk add --update --no-cache bash openssl
 
 RUN mkdir /app
 WORKDIR /app
